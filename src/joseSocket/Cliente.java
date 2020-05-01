@@ -4,6 +4,12 @@ package joseSocket;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 
@@ -65,7 +71,16 @@ class LaminaMarcoCliente extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e){
                 
-                System.out.println("yaaaaaa");
+                try {
+                    Socket miSocket=new Socket(InetAddress.getLocalHost(),9999);//de esta manera se crea un tipo de puente entre el cliente y servidor
+                    DataOutputStream flujoSalida=new DataOutputStream(miSocket.getOutputStream());//de esta forma es como obtener la ruta por donde se enviaran los datos
+                    flujoSalida.writeUTF(campo1.getText());//aui enviamos el texto escrito en el campo de texto 
+                    flujoSalida.close();
+                    
+                } catch (IOException ex) {
+                    
+                    System.out.println(ex.getMessage());
+                }
             }
 	
         

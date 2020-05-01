@@ -13,6 +13,12 @@ package joseSocket;
 import javax.swing.*;
 
 import java.awt.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Servidor  {
 
@@ -26,7 +32,7 @@ public class Servidor  {
 	}	
 }
 
-class MarcoServidor extends JFrame {
+class MarcoServidor extends JFrame implements Runnable{
 	
 	public MarcoServidor(){
 		
@@ -43,9 +49,30 @@ class MarcoServidor extends JFrame {
 		add(milamina);
 		
 		setVisible(true);
+                
+                Thread hilo=new Thread(this);//creamos un hilo para ue este a la escucha constate en segundo plano de lo ue envie el cliente
+                
+                hilo.start();
+                
 		
 		}
 	
 	private	JTextArea areatexto;
+
+    @Override
+    public void run() {
+        
+            try {
+                ServerSocket servidor=new ServerSocket(9999);//se debe establecer el puerto de comuniacion ue se debe abrir
+                Socket miSocket=servidor.accept();//de esta forma aceptamos la conexion
+                DataInputStream flujoEntrada=new DataInputStream(miSocket.getInputStream());//hacemos el flujo de datos de entrada
+                String texto=flujoEntrada.readUTF();//guardamos los datos recibidos en un varable
+                areatexto.append(texto);//agregamos el texto recibido en el texArea
+                miSocket.close();//cerramos la conexion
+            } catch (IOException ex) {
+                System.out.println("error en el servidor");
+            }
+        
+    }
 }
 

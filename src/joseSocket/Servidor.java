@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ class MarcoServidor extends JFrame implements Runnable{
 	
 	public MarcoServidor(){
 		
-		setBounds(1200,300,280,350);				
+		setBounds(1000,300,280,350);				
 			
 		JPanel milamina= new JPanel();
 		
@@ -63,18 +64,37 @@ class MarcoServidor extends JFrame implements Runnable{
     public void run() {
         
             try {
-                
+               
                 
                 ServerSocket servidor=new ServerSocket(9999);//se debe establecer el puerto de comuniacion ue se debe abrir
+                String ipRecibido,nickRecibido,mensajeRecibido;  //en estas variables guardaremos los datos recibidos  
                 while(true){
-                Socket miSocket=servidor.accept();//de esta forma aceptamos la conexion
+                
+                 
+                 PaqueteEnvio datosRecibidos;
+                 Socket miSocket=servidor.accept();//de esta forma aceptamos la conexion
+                
+                 ObjectInputStream flujoEntrada=new ObjectInputStream(miSocket.getInputStream());//recibimos la informacion o datos de entrada
+                 datosRecibidos=(PaqueteEnvio)flujoEntrada.readObject();//guardamos la info recibida en una var de tipo PaqueteEnvio
+                 
+                 ipRecibido=datosRecibidos.getIp();//y guardamos los datos correpondientes en la variables
+                 nickRecibido=datosRecibidos.getNick();
+                 mensajeRecibido=datosRecibidos.getMensaje();
+                 
+                 areatexto.append("\n"+nickRecibido+": "+mensajeRecibido+" PARA: "+ipRecibido);//mostramos los datos en el area de texto del servidor
+                 miSocket.close();//se debe cerrar la conexion
+                
+                /*
                 DataInputStream flujoEntrada=new DataInputStream(miSocket.getInputStream());//hacemos el flujo de datos de entrada
                 String texto=flujoEntrada.readUTF();//guardamos los datos recibidos en un varable
-                areatexto.append(texto);//agregamos el texto recibido en el texArea
-                miSocket.close();//cerramos la conexion
+                areatexto.append("\n"+texto);//agregamos el texto recibido en el texArea
+                miSocket.close();//cerramos la conexion */
                 }
             } catch (IOException ex) {
-                System.out.println("error en el servidor");
+                System.out.println("error en el servidor"+" "+ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MarcoServidor.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("error al leer el objeto");
             }
         
     }

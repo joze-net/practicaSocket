@@ -72,7 +72,7 @@ class LaminaMarcoCliente extends JPanel{
             public void actionPerformed(ActionEvent e){
                 
                 try {
-                    Socket miSocket=new Socket(InetAddress.getLocalHost(),9999);//de esta manera se crea un tipo de puente entre el cliente y servidor
+                    Socket miSocket=new Socket("192.168.56.1"/*InetAddress.getLocalHost()*/,9999);//de esta manera se crea un tipo de puente entre el cliente y servidor
                     DataOutputStream flujoSalida=new DataOutputStream(miSocket.getOutputStream());//de esta forma es como obtener la ruta por donde se enviaran los datos
                     flujoSalida.writeUTF(campo1.getText());//aui enviamos el texto escrito en el campo de texto 
                     flujoSalida.close();

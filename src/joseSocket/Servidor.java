@@ -13,9 +13,9 @@ package joseSocket;
 import javax.swing.*;
 
 import java.awt.*;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -82,6 +82,13 @@ class MarcoServidor extends JFrame implements Runnable{
                  mensajeRecibido=datosRecibidos.getMensaje();
                  
                  areatexto.append("\n"+nickRecibido+": "+mensajeRecibido+" PARA: "+ipRecibido);//mostramos los datos en el area de texto del servidor
+                 
+                 Socket socketReenvio = new Socket(ipRecibido,9090);//este sera la parte de abrir un nuevo enlcae con el cliente al que se le enviaran los datos
+                 ObjectOutputStream flujoServidorCliente= new ObjectOutputStream(socketReenvio.getOutputStream());//creamos el nuevo flujo de datos hacie el cliente receptor
+                 flujoServidorCliente.writeObject(datosRecibidos);//enviamos el objeto al cliente
+                 
+                 
+                 socketReenvio.close();
                  miSocket.close();//se debe cerrar la conexion
                 
                 /*

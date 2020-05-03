@@ -4,14 +4,12 @@ package joseSocket;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 
@@ -44,7 +42,7 @@ class MarcoCliente extends JFrame{
 	
 }
 
-class LaminaMarcoCliente extends JPanel{
+class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 	public LaminaMarcoCliente(){
             
@@ -61,9 +59,9 @@ class LaminaMarcoCliente extends JPanel{
                 
                 add(txtip);
                 
-                txtMensaje=new JTextArea(10,19);
+                campoChat=new JTextArea(10,19);
                 
-                add(txtMensaje);
+                add(campoChat);
 	
 		campo1=new JTextField(20);
 	
@@ -76,8 +74,41 @@ class LaminaMarcoCliente extends JPanel{
                 miboton.addActionListener(objetoEvento);
 		
 		add(miboton);	
+                
+                Thread nuevoHilo=new Thread(this);
+                
+                nuevoHilo.start();
 		
 	}
+
+    @Override
+    public void run() {
+       
+        while (true) {            
+            
+            try {
+                ServerSocket servidor_cliente=new ServerSocket(9090);//establecemos el puente de comunicacion a abrir del servidor hacia este cliente
+                Socket cliente;//nesecitamos un flujo de entrada, para usaremos esta variable
+                PaqueteEnvio paqueteRecibido;//y tambien un variable donde se almacenara los datos recibidos
+                
+                
+                while (true) {                    
+                    
+                    cliente=servidor_cliente.accept();//aceptamos la conexion
+                    ObjectInputStream flujoEntrada= new ObjectInputStream(cliente.getInputStream());//creamos el flujo de entrada de datos
+                    paqueteRecibido=(PaqueteEnvio)flujoEntrada.readObject();//leemos el objeto recibido y lo almacenamos en la variable asiganada paa ello
+                    campoChat.append("\n "+paqueteRecibido.getNick()+" dice: "+paqueteRecibido.getMensaje());//mostramos el mensaje en el chat del cliente
+                }
+                
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            } catch (ClassNotFoundException ex) {
+                System.out.println("Error al leer los datos enviados del servidor en direccion al cliente");
+            }
+            
+        }
+        
+    }
 	
 	
 	
@@ -113,7 +144,7 @@ class LaminaMarcoCliente extends JPanel{
         
     }	
 		
-	private JTextArea txtMensaje;
+	private JTextArea campoChat;
         
 	private JTextField campo1,txtip,txtnick;
 	

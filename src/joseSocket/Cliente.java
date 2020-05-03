@@ -46,16 +46,31 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 	
 	public LaminaMarcoCliente(){
             
-            
-                txtnick = new JTextField(5);
+                nombreNick =new JLabel("Nick: ");
+                
+                add(nombreNick);
+                
+                txtnick = new JLabel();
+                
+                nombre = JOptionPane.showInputDialog("Ingrese Nick: ");
+                
+                txtnick.setText(nombre);
                 
                 add(txtnick);
+                
+                
 	
 		JLabel texto=new JLabel("CLIENTE");
 		
 		add(texto);
                 
-                txtip = new JTextField(5);
+                txtip = new JComboBox();
+                
+                txtip.addItem("user 1");
+                
+                txtip.addItem("user 2");
+                
+                txtip.addItem("user 3");
                 
                 add(txtip);
                 
@@ -123,7 +138,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                     PaqueteEnvio datos=new PaqueteEnvio();//en la variable datos se va a empaquetar la informacion a enviar
                     
                     datos.setNick(txtnick.getText());//guardamos el nick o nombre del cliente en la variable datos, on¡btenido del campo de txt
-                    datos.setIp(txtip.getText());//guardamos la  ip  del cliente en la variable datos, on¡btenido del campo de txt
+                    datos.setIp(txtip.getSelectedItem().toString());//guardamos la  ip  del cliente en la variable datos, on¡btenido del campo de txt
                     datos.setMensaje(campo1.getText());//guardamos el msm o   cliente en la variable datos, on¡btenido del campo de txt
                     
                     ObjectOutputStream flujoSalida=new ObjectOutputStream(miSocket.getOutputStream());//creamos el flujo de salida del objeto con la informacion
@@ -146,9 +161,15 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		
 	private JTextArea campoChat;
         
-	private JTextField campo1,txtip,txtnick;
+	private JTextField campo1;
+        
+        private JComboBox txtip;
+        
+        private JLabel txtnick,nombreNick;
 	
 	private JButton miboton;
+        
+        private String nombre;
 	
 }
 

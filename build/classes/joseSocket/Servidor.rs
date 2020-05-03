@@ -1,2 +1,0 @@
-joseSocket.MarcoServidor
-joseSocket.Servidor

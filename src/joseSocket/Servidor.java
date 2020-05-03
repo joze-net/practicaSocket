@@ -87,7 +87,7 @@ class MarcoServidor extends JFrame implements Runnable{
                  ObjectOutputStream flujoServidorCliente= new ObjectOutputStream(socketReenvio.getOutputStream());//creamos el nuevo flujo de datos hacie el cliente receptor
                  flujoServidorCliente.writeObject(datosRecibidos);//enviamos el objeto al cliente
                  
-                 
+                 flujoServidorCliente.close();
                  socketReenvio.close();
                  miSocket.close();//se debe cerrar la conexion
                 

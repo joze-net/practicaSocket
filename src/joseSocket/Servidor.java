@@ -75,16 +75,12 @@ class MarcoServidor extends JFrame implements Runnable{
                  PaqueteEnvio datosRecibidos;
                  Socket miSocket=servidor.accept();//de esta forma aceptamos la conexion
                  
-                 //------------------DETECTA IP ONLINE-----------------------------
-                 
-                 InetAddress localizacion=miSocket.getInetAddress();//esta parte nos devuelve un objeto de tipo InetAddress
-                 String ipOnline=localizacion.getHostAddress();//en esta variable guardamos la ip que se ha conectado
-                    System.out.println("Online: "+ipOnline);
-                 
-                 //--------------------FIN ONLINE---------------------------------------
+                
                 
                  ObjectInputStream flujoEntrada=new ObjectInputStream(miSocket.getInputStream());//recibimos la informacion o datos de entrada
                  datosRecibidos=(PaqueteEnvio)flujoEntrada.readObject();//guardamos la info recibida en una var de tipo PaqueteEnvio
+                 
+                 if(!datosRecibidos.getMensaje().equals("Online ")){
                  
                  ipRecibido=datosRecibidos.getIp();//y guardamos los datos correpondientes en la variables
                  nickRecibido=datosRecibidos.getNick();
@@ -99,6 +95,17 @@ class MarcoServidor extends JFrame implements Runnable{
                  flujoServidorCliente.close();
                  socketReenvio.close();
                  miSocket.close();//se debe cerrar la conexion
+                 }else{
+                     
+                      //------------------DETECTA IP ONLINE-----------------------------
+                 
+                 InetAddress localizacion=miSocket.getInetAddress();//esta parte nos devuelve un objeto de tipo InetAddress
+                 String ipOnline=localizacion.getHostAddress();//en esta variable guardamos la ip que se ha conectado
+                 System.out.println("Online: "+ipOnline);
+                 
+                 //--------------------FIN ONLINE---------------------------------------
+                     
+                 }
                 
                 /*
                 DataInputStream flujoEntrada=new DataInputStream(miSocket.getInputStream());//hacemos el flujo de datos de entrada

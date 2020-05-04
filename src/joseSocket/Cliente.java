@@ -224,10 +224,10 @@ class InformaIp extends WindowAdapter{
         try {
             Socket puenteInformar= new Socket("192.168.56.1",9999);//creamos el puente de comunicacion
             ObjectOutputStream ipInformar=new ObjectOutputStream(puenteInformar.getOutputStream());//creamos el flujo de datos de salida
-            PaqueteEnvio datosInformacion=new PaqueteEnvio();
-            datosInformacion.setMensaje("Online ");
-            ipInformar.writeObject(datosInformacion);
-            ipInformar.close();
+            PaqueteEnvio datosInformacion=new PaqueteEnvio();//creamos un paquete de envio de informacion
+            datosInformacion.setMensaje("Online ");//agregamos este mensaje al objeto de tipo PaqueteEbvio
+            ipInformar.writeObject(datosInformacion);//enviamos los datos mediante la variable creada tipo ObjectInputStream
+            ipInformar.close();//cerramos la conexion
             
         } catch (IOException ex) {
             System.out.println("Error al informar la ip, origen en clase cliente");

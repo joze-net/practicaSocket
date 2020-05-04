@@ -4,12 +4,16 @@ package joseSocket;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 
@@ -19,6 +23,10 @@ public class Cliente {
 		// TODO Auto-generated method stub
 		
 		MarcoCliente mimarco=new MarcoCliente();
+                
+                InformaIp wl=new InformaIp();//esta claase tiene un evento de ventana para cuando sea abierta avise al servidor
+                
+                mimarco.addWindowListener(wl);//ponemos la ventana a la escucha
 		
 		mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -93,6 +101,8 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                 Thread nuevoHilo=new Thread(this);
                 
                 nuevoHilo.start();
+                
+                
 		
 	}
 
@@ -203,5 +213,26 @@ class PaqueteEnvio implements Serializable{
     }
     
     
+    
+}
+
+class InformaIp extends WindowAdapter{
+    
+    @Override
+    public void windowOpened(WindowEvent e){
+       
+        try {
+            Socket puenteInformar= new Socket("192.168.56.1",9999);//creamos el puente de comunicacion
+            ObjectOutputStream ipInformar=new ObjectOutputStream(puenteInformar.getOutputStream());//creamos el flujo de datos de salida
+            PaqueteEnvio datosInformacion=new PaqueteEnvio();
+            datosInformacion.setMensaje("Online ");
+            ipInformar.writeObject(datosInformacion);
+            ipInformar.close();
+            
+        } catch (IOException ex) {
+            System.out.println("Error al informar la ip, origen en clase cliente");
+        }
+        
+    }
     
 }

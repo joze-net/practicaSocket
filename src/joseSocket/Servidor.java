@@ -16,6 +16,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -73,6 +74,14 @@ class MarcoServidor extends JFrame implements Runnable{
                  
                  PaqueteEnvio datosRecibidos;
                  Socket miSocket=servidor.accept();//de esta forma aceptamos la conexion
+                 
+                 //------------------DETECTA IP ONLINE-----------------------------
+                 
+                 InetAddress localizacion=miSocket.getInetAddress();//esta parte nos devuelve un objeto de tipo InetAddress
+                 String ipOnline=localizacion.getHostAddress();//en esta variable guardamos la ip que se ha conectado
+                    System.out.println("Online: "+ipOnline);
+                 
+                 //--------------------FIN ONLINE---------------------------------------
                 
                  ObjectInputStream flujoEntrada=new ObjectInputStream(miSocket.getInputStream());//recibimos la informacion o datos de entrada
                  datosRecibidos=(PaqueteEnvio)flujoEntrada.readObject();//guardamos la info recibida en una var de tipo PaqueteEnvio

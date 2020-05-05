@@ -73,15 +73,11 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 		
 		add(texto);
                 
-                txtip = new JComboBox();
+                menuip = new JComboBox();
                 
-                txtip.addItem("user 1");
+               
                 
-                txtip.addItem("user 2");
-                
-                txtip.addItem("user 3");
-                
-                add(txtip);
+                add(menuip);
                 
                 campoChat=new JTextArea(10,19);
                 
@@ -123,7 +119,23 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                     cliente=servidor_cliente.accept();//aceptamos la conexion
                     ObjectInputStream flujoEntrada= new ObjectInputStream(cliente.getInputStream());//creamos el flujo de entrada de datos
                     paqueteRecibido=(PaqueteEnvio)flujoEntrada.readObject();//leemos el objeto recibido y lo almacenamos en la variable asiganada paa ello
-                    campoChat.append("\n "+paqueteRecibido.getNick()+" dice: "+paqueteRecibido.getMensaje());//mostramos el mensaje en el chat del cliente
+                   
+                    
+                    
+                    if(!paqueteRecibido.getMensaje().equals("Online ")){
+                        
+                         campoChat.append("\n "+paqueteRecibido.getNick()+" dice: "+paqueteRecibido.getMensaje());//mostramos el mensaje en el chat del cliente
+                        
+                    }else{
+                        ArrayList<String> actualizarIpConect=new ArrayList<String>();//se guardaran las ip que se van conectando en esta variable array
+                        actualizarIpConect=paqueteRecibido.getIpConectadas();//se realiza el almacenamiento
+                        
+                        for (String poneIp: actualizarIpConect){
+                            menuip.removeAll();//reseteamos para no tener las ip repetidas
+                            menuip.addItem(poneIp);//agregamos las ip el comboBox
+                            
+                        }
+                    }
                 }
                 
             } catch (IOException ex) {
@@ -149,7 +161,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
                     PaqueteEnvio datos=new PaqueteEnvio();//en la variable datos se va a empaquetar la informacion a enviar
                     
                     datos.setNick(txtnick.getText());//guardamos el nick o nombre del cliente en la variable datos, on¡btenido del campo de txt
-                    datos.setIp(txtip.getSelectedItem().toString());//guardamos la  ip  del cliente en la variable datos, on¡btenido del campo de txt
+                    datos.setIp(menuip.getSelectedItem().toString());//guardamos la  ip  del cliente en la variable datos, on¡btenido del campo de txt
                     datos.setMensaje(campo1.getText());//guardamos el msm o   cliente en la variable datos, on¡btenido del campo de txt
                     
                     ObjectOutputStream flujoSalida=new ObjectOutputStream(miSocket.getOutputStream());//creamos el flujo de salida del objeto con la informacion
@@ -174,7 +186,7 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
         
 	private JTextField campo1;
         
-        private JComboBox txtip;
+        private JComboBox menuip;
         
         private JLabel txtnick,nombreNick;
 	

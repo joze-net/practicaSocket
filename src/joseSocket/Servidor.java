@@ -107,8 +107,17 @@ class MarcoServidor extends JFrame implements Runnable{
                  listaip.add(ipOnline);//agregamos en un arrayList las ip que envian señal al servidor
                  datosRecibidos.setIpConectadas(listaip);//agregamos el array de ips conectadas al paquete de datos recibido
                      
-                 for(String l: listaip){
-                     System.out.println(l);//imprimo las ip que se van conectando
+                 for(String l: listaip){//en este punto se le enviara a todos los clientes las ip a medidad de que se conectan
+                     
+                    Socket socketReenvio = new Socket(l,9090);//en este punto se enviara a cada uno de los clientes conectados las ip que estan disponibles
+                    ObjectOutputStream flujoServidorCliente= new ObjectOutputStream(socketReenvio.getOutputStream());//creamos el nuevo flujo de datos hacie el cliente receptor
+                    flujoServidorCliente.writeObject(datosRecibidos);//enviamos el objeto al cliente
+                 
+                    flujoServidorCliente.close();
+                    socketReenvio.close();
+                    miSocket.close();//se debe cerrar la conexion
+                     
+                     
                  }
                  
                  //--------------------FIN ONLINE---------------------------------------

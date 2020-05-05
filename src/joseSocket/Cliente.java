@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -187,6 +188,15 @@ class LaminaMarcoCliente extends JPanel implements Runnable{
 class PaqueteEnvio implements Serializable{
     
     private String nick,ip,mensaje;
+    ArrayList <String> ipConectadas=new ArrayList<String>();
+
+    public ArrayList<String> getIpConectadas() {
+        return ipConectadas;
+    }
+
+    public void setIpConectadas(ArrayList<String> ipConectadas) {
+        this.ipConectadas = ipConectadas;
+    }
 
     public String getNick() {
         return nick;

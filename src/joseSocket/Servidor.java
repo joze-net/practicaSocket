@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,6 +70,7 @@ class MarcoServidor extends JFrame implements Runnable{
                 
                 ServerSocket servidor=new ServerSocket(9999);//se debe establecer el puerto de comuniacion ue se debe abrir
                 String ipRecibido,nickRecibido,mensajeRecibido;  //en estas variables guardaremos los datos recibidos  
+                ArrayList<String> listaip=new  ArrayList<>();
                 while(true){
                 
                  
@@ -102,6 +104,12 @@ class MarcoServidor extends JFrame implements Runnable{
                  InetAddress localizacion=miSocket.getInetAddress();//esta parte nos devuelve un objeto de tipo InetAddress
                  String ipOnline=localizacion.getHostAddress();//en esta variable guardamos la ip que se ha conectado
                  System.out.println("Online: "+ipOnline);
+                 listaip.add(ipOnline);//agregamos en un arrayList las ip que envian señal al servidor
+                 datosRecibidos.setIpConectadas(listaip);//agregamos el array de ips conectadas al paquete de datos recibido
+                     
+                 for(String l: listaip){
+                     System.out.println(l);//imprimo las ip que se van conectando
+                 }
                  
                  //--------------------FIN ONLINE---------------------------------------
                      
